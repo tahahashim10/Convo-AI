@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { loginUser } from '../helpers/api-communicator';
 
 type User = {
     name: String;
@@ -8,8 +9,8 @@ type User = {
 type UserAuth = {
     isLoggedIn: Boolean;
     user: User | null;
-    login:(email: String, password: string)=>Promise<void>;
-    signup:(name: String, email: string, password: String)=>Promise<void>;
+    login:(email: string, password: string)=>Promise<void>;
+    signup:(name: string, email: string, password: string)=>Promise<void>;
     logout:()=>Promise<void>;
 };
 
@@ -23,8 +24,14 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
         // fetch if users cookies are valid, then skip login
     }, []);
 
-    const login = async(email: String, password: String) => {};
-    const signup = async(name: String, email: String, password: String) => {};
+    const login = async(email: string, password: string) => {
+        const data = await loginUser(email, password);
+        if(data) {
+            setUser({email: data.email, name: data.name});
+            setIsLoggedIn(true);
+        }
+    };
+    const signup = async(name: string, email: string, password: string) => {};
     const logout = async() => {};
 
     const value = {
