@@ -1,8 +1,7 @@
-import { rejects } from "assert";
-import { error } from "console";
 import { Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
-import { resolve } from "path";
+import { COOKIE_NAME } from "./constants.js";
+
 
 export const createToken = (id: string, email: string, expiresIn: string) => {
     const payload = { id, email};
@@ -11,7 +10,7 @@ export const createToken = (id: string, email: string, expiresIn: string) => {
 };
 
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.signedCookies['${COOKIE_NAME}'];
+    const token = req.signedCookies[`${COOKIE_NAME}`];
     if(!token || token.trim() === "") {
         return res.status(401).json({message: "Token Not Received"});
     }
@@ -22,11 +21,10 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
                 reject(err.message);
                 return res.status(401).json({message:"Token Expired"});
             } else {
-                console.log("Token Verification Successful");
                 resolve();
                 res.locals.jwtData = success;
                 return next();
             }
         });
-    }) ;
+    });
 };

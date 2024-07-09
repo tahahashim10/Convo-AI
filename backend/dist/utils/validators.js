@@ -24,4 +24,8 @@ export const signupValidator = [
     ...loginValidator,
     // takes the email and password validators from loginValidator
 ];
+export const chatCompletionValidator = [
+    // chains
+    body("message").notEmpty().withMessage("Name is required"),
+];
 //# sourceMappingURL=validators.js.map
