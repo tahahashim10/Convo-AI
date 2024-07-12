@@ -77,4 +77,21 @@ export const verifyUser = async (req, res, next) => {
         return res.status(200).json({ message: "Error", cause: error.message });
     }
 };
+export const userLogout = async (req, res, next) => {
+    try {
+        // user token check
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            return res.status(401).send("User Not Registered or Token Malfunctioned");
+        }
+        if (user._id.toString() !== res.locals.jwtData.id) {
+            return res.status(401).send("Permissions Did Not Matched");
+        }
+        res.clearCookie(COOKIE_NAME, { httpOnly: true, domain: "localhost", signed: true, path: "/" });
+        return res.status(200).json({ message: "Ok", name: user.name, email: user.email });
+    }
+    catch (error) {
+        return res.status(200).json({ message: "Error", cause: error.message });
+    }
+};
 //# sourceMappingURL=user_controllers.js.map

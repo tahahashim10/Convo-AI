@@ -4,14 +4,16 @@ import { useAuth } from '../context/AuthContext';
 import red from '@mui/material/colors/red'
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io'
-import { getUserChats, sendChatRequest } from '../helpers/api-communicator';
+import { deleteUserChats, getUserChats, sendChatRequest } from '../helpers/api-communicator';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 type Message = {
   role: 'user' | 'assistant';
   content: string;
 }
 const Chat = () => {
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
@@ -29,6 +31,19 @@ const Chat = () => {
     setChatMessages([...chatData.chats]);
   };
 
+  const handleDeleteChats = async () => {
+    try {
+      toast.loading("Deleting Chats", {id: "deletechats"})
+      await deleteUserChats();
+      setChatMessages([]);
+      toast.success("Deleted Chats Successfully", {id: "deletechats"})
+    } catch (error) {
+      console.log(error);
+      toast.error("Deleting Chats Failed", {id: "deletechats"})
+      
+    }
+  };
+
   useLayoutEffect(() => {
     if(auth?.isLoggedIn && auth.user) {
       toast.loading("Loading Chats", {id: "loadchats"});
@@ -41,6 +56,13 @@ const Chat = () => {
       });
     }
   }, [auth]);
+
+  useEffect(() => {
+    if(!auth?.user) {
+      return navigate("/login");
+    }
+ 
+  }, [])
   
   return (
     <Box sx={{display: 'flex', flex: 1, width: '100%', height: '100%', marginTop: 3, gap: 3}}>
@@ -51,7 +73,7 @@ const Chat = () => {
           </Avatar>
           <Typography sx={{mx: 'auto', fontFamily: 'work sans'}}>You Are Talking to a ChatBot</Typography>
           <Typography sx={{mx: 'auto', fontFamily: 'work sans', marginY: 4, padding: 3}}>How can I help you today?</Typography>
-          <Button sx={{width: '200px', marginY: 'auto', color: 'white', fontWeight: '700', borderRadius: 3, marginX: 'auto', bgcolor: red[300], ":hover": {bgcolor: red.A400}}}>
+          <Button onClick={handleDeleteChats} sx={{width: '200px', marginY: 'auto', color: 'white', fontWeight: '700', borderRadius: 3, marginX: 'auto', bgcolor: red[300], ":hover": {bgcolor: red.A400}}}>
             Clear Conversation
           </Button>
         </Box>
@@ -66,9 +88,9 @@ const Chat = () => {
             <ChatItem content={chat.content} role={chat.role} key={index}/>
           ) )}
         </Box>
-        <div style={{width: '100%', padding: '20px', borderRadius: 8, backgroundColor: 'rgb(17, 27, 39)', display: 'flex', margin: 'auto'}}>
-          <input ref={inputRef} type="text" style={{width: '100%', backgroundColor: 'transparent', padding: '10px', border: 'none', outline: 'none', color: 'white', fontSize: '20px'}} />
-          <IconButton onClick={handleSubmit} sx={{marginLeft: 'auto', color: 'white'}}>
+        <div style={{width: '100%', borderRadius: 8, backgroundColor: 'rgb(17, 27, 39)', display: 'flex', margin: 'auto'}}>
+          <input ref={inputRef} type="text" style={{width: '100%', backgroundColor: 'transparent', padding: '30px', border: 'none', outline: 'none', color: 'white', fontSize: '20px'}} />
+          <IconButton onClick={handleSubmit} sx={{marginLeft: 'auto', color: 'white', mx: 1}}>
             <IoMdSend />
           </IconButton>
         </div>
