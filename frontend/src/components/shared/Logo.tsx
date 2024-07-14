@@ -29,7 +29,16 @@ const Logo = () => {
                      textShadow: "2px 2px 20px #000"
                 }}
                 >
-                    <span style={{fontSize: "20px"}}>MERN</span>-GPT
+                    <span style={{fontSize: "20px"}}>
+                        <Link to={"/"} style={{textDecoration: 'none', color: 'white'}}>
+                            BMK
+                        </Link>
+                        
+                    </span>
+                    <Link to={"/"} style={{textDecoration: 'none', color: 'white'}}>
+                        -GPT
+                    </Link>
+                    
             </Typography>
 
 

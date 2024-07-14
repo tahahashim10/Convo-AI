@@ -8,7 +8,7 @@ const Footer = () => {
         <p style={{ fontSize: '30px', textAlign: 'center', padding: '20px' }}>
           Built by
           <span className="nav-link" style={{color: 'white'}}>
-            Taha Hashim
+            The BMK Association
           </span>
         </p>
       </div>
