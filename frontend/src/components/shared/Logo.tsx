@@ -31,12 +31,12 @@ const Logo = () => {
                 >
                     <span style={{fontSize: "20px"}}>
                         <Link to={"/"} style={{textDecoration: 'none', color: 'white'}}>
-                            BMK
+                            Convo
                         </Link>
                         
                     </span>
                     <Link to={"/"} style={{textDecoration: 'none', color: 'white'}}>
-                        -GPT
+                        -AI
                     </Link>
                     
             </Typography>
